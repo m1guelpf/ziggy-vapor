@@ -2,7 +2,7 @@
 
 > A better way to organize your routes.
 
-[![Swift Version](https://img.shields.io/badge/Swift-5.10-brightgreen.svg)](http://swift.org)
+[![Swift Version](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fm1guelpf%2Fziggy-vapor%2Fbadge%3Ftype%3Dswift-versions&color=brightgreen)](http://swift.org)
 [![Vapor Version](https://img.shields.io/badge/Vapor-4-30B6FC.svg)](http://vapor.codes)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/m1guelpf/ziggy-vapor/main/LICENSE)
 
