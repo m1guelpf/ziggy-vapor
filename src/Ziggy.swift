@@ -5,16 +5,6 @@ import Vapor
 public struct Ziggy {
     fileprivate let application: Application
 
-    /// The URL of the application.
-    var url: String? {
-        Environment.get("APP_URL")
-    }
-
-    /// The port of the application.
-    var port: Int? {
-        URL(string: url ?? "")?.port
-    }
-
     /// Configure the Ziggy package.
     /// This method should be called in `configure.swift`.
     public func setup() {
@@ -75,8 +65,8 @@ public struct Ziggy {
             }
     }
 
-    private func serialize() -> String {
-        let data = try! JSONEncoder().encode(Serialized(url: url, port: port, routes: routes(), defaults: [:]))
+    private func serialize(url: URL) -> String {
+        let data = try! JSONEncoder().encode(Serialized(url: url.absoluteString, port: url.port, routes: routes(), defaults: [:]))
 
         return String(data: data, encoding: .utf8)!
     }
@@ -133,8 +123,18 @@ public struct Ziggy {
     struct ZiggyTag: UnsafeUnescapedLeafTag {
         let ziggy: Ziggy
 
-        func render(_: LeafContext) throws -> LeafData {
-            let ziggy = ziggy.serialize()
+        struct ZiggyError: Error, DebuggableError {
+            var identifier: String { "ZiggyError" }
+            var reason: String { "Ziggy requires a request to be present when rendering your views." }
+            var suggestedFixes: [String] { ["Make sure you're rendering your views from the request object, not the application object."] }
+        }
+
+        func render(_ ctx: LeafContext) throws -> LeafData {
+            guard let req = ctx.request else {
+                throw ZiggyError()
+            }
+
+            let ziggy = ziggy.serialize(url: req.baseURL!)
 
             return LeafData.string("<script type=\"text/javascript\">const Ziggy=\(ziggy);</script>")
         }
